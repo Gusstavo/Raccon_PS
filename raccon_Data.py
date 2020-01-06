@@ -93,8 +93,9 @@ def parte_C(raw_json):
     for produtos in raw_json["posts"]:
 
         if re.search('/05/', produtos["date"], re.IGNORECASE):
-            # Adiciona o número de likes ao somatório de likes de maio
-            likes_maio += produtos["likes"]
+            if re.search('google_cpc', produtos["media"], re.IGNORECASE) or re.search('facebook_cpc', produtos["media"], re.IGNORECASE) or re.search('instagram_cpc', produtos["media"], re.IGNORECASE):
+                # Adiciona o número de likes ao somatório de likes de maio
+                likes_maio += produtos["likes"]
 
     #print("Quantidade de likes no mês de maio: " + str(likes_maio))
  
@@ -150,7 +151,7 @@ def enviar_resposta(resposta_A, resposta_B, resposta_C, resposta_D):
     final_response = {
         'full_name': "Gustavo de Souza",
         'email': "gustavo.dcomp@gmail.com",
-        'code_link': "www.github.com/Gusstavo/Raccon_PS",
+        'code_link': "www.github.com/gusstavo/raccon_ps",
         'response_a': [
         ],
         'response_b': [
@@ -202,7 +203,7 @@ def main():
     # Recebe o json com as respostas
     resultado = enviar_resposta(resposta_A, resposta_B, resposta_C, resposta_D)
 
-    # print(json.dumps(resultado, indent=4))
+    #print(json.dumps(resultado, indent=4))
     
     # Apenas gerar um arquivo com a resposta
     with open('resposta.json', 'w') as json_file:
@@ -210,11 +211,14 @@ def main():
 
     # Prepara para realizar o request
     headers = {
-    'Content-type': 'application/json',
+        'Content-Type': 'application/json',
     }
-    response = requests.post('https://us-/%0Acentral1-psel-clt-ti-junho-2019.cloudfunctions.net/psel_2019_post', headers=headers, data=resultado)
+    url = 'https://us-central1-psel-clt-ti-junho-2019.cloudfunctions.net/psel_2019_post'
 
-    print(response) 
+    response = requests.post(url, headers=headers, data=resultado)
+
+    print("Response:" + str(response))
+
 
 if __name__ == '__main__':
     main()
